@@ -39,28 +39,28 @@ const TodoList = () => {
 
 
     const addingToDo = (ev) => {
-        setList([...addList, addTask]);
+        setList([...addList, { label: '' + addTask + ' ', done: false }]);
 
         console.log(addList);
-        // fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
-        //     method: 'PUT',
-        //     // mode: 'cors',
-        //     // redirect: 'follow',
-        //     headers: new Headers({
-        //         'Content-Type': 'application/json'
-        //     }),
-        //     body: [addList]
-        // }).then((res) => {
-        //     console.log(res);
-        //     return res.json()
-        // }).then(
-        //     data => console.log(data)
-        // ).catch(
-        //     error => console.log(error)
-        // );
-
-        // 
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
+            method: 'PUT',
+            // mode: 'cors',
+            // redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: [JSON.stringify(addList)]
+        }).then((res) => {
+            console.log(res);
+            return res.json()
+        }).then(
+            data => console.log(data)
+        ).catch(
+            error => console.log(error)
+        );
         setTask("");
+        // 
+
     }
 
     const valueChange = (e) => {
