@@ -13,8 +13,6 @@ const TodoList = () => {
     const uploadData = () => {
         fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
             method: 'GET',
-            // mode: 'cors',
-            // redirect: 'follow',
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
@@ -24,32 +22,23 @@ const TodoList = () => {
         }).then(
             data => {
                 console.log(data);
-
                 setLoading(false)
                 setList(data);
-
-                // console.log(addList);
-                // setTask(data)
             }
-
         ).catch(
             error => console.log(error)
         );
     }
 
-
     const addingToDo = (ev) => {
         setList([...addList, { label: '' + addTask + ' ', done: false }]);
-
-        console.log(addList);
+        // console.log(addList);
         fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
             method: 'PUT',
-            // mode: 'cors',
-            // redirect: 'follow',
             headers: new Headers({
                 'Content-Type': 'application/json'
             }),
-            body: [JSON.stringify(addList)]
+            body: JSON.stringify([...addList, { label: '' + addTask + ' ', done: false }])
         }).then((res) => {
             console.log(res);
             return res.json()
@@ -59,8 +48,6 @@ const TodoList = () => {
             error => console.log(error)
         );
         setTask("");
-        // 
-
     }
 
     const valueChange = (e) => {
@@ -68,25 +55,39 @@ const TodoList = () => {
 
     }
 
-    const deleteTask = (key) => {
-        // fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
-        //     method: 'DELETE',
-        //     // mode: 'cors',
-        //     // redirect: 'follow',
-        //     headers: new Headers({
-        //         'Content-Type': 'application/json'
-        //     }),
-        //     body: setList(addList.filter((item, index) => index !== key))
-        // }).then((res) => {
-        //     console.log(res);
-        //     return res.json()
-        // }).then(
-        //     data => console.log(data)
-        // ).catch(
-        //     error => console.log(error)
-        // );
+    const deleteList = (key) => {
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
+            method: 'DELETE',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        }).then((res) => {
+            console.log(res);
+            return res.json()
+        }).then(
+            data => console.log(data)
+        ).catch(
+            error => console.log(error)
+        );
 
-        // setList(addList.filter((item, index) => index !== key));
+    }
+
+    const deleteTask = (key) => {
+        setList(addList.filter((item, index) => index !== key));
+        fetch("https://assets.breatheco.de/apis/fake/todos/user/robcmppp", {
+            method: 'PUT',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify(addList.filter((item, index) => index !== key))
+        }).then((res) => {
+            console.log(res);
+            return res.json()
+        }).then(
+            data => console.log(data)
+        ).catch(
+            error => console.log(error)
+        );
     }
 
     return (
@@ -101,14 +102,16 @@ const TodoList = () => {
                         </div>
                         <ul className="list-group">
                             {!isLoading ?
-                                addList.map((item, index) => <li className="list-group-item list-group-item-info" key={index} >
-                                    {
-                                        item.label}</li>)
+                                addList.map((item, index) =>
+                                    <li className="list-group-item list-group-item-info" key={index} >
+                                        {item.label}<span className="ps-5"><button onClick={() => {
+                                            deleteTask(index);
+                                        }}><i class="bi bi-x"></i></button></span></li>)
                                 : <li className="list-group-item list-group-item-info">Loading data...</li>
                             }
                         </ul>
                         <span className="d-flex"><button onClick={() => {
-                            deleteTask();
+                            deleteList();
                         }}><i className="bi bi-x"></i>Delete list</button></span>
                     </div >
                 </div>
